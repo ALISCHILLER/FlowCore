@@ -60,50 +60,52 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    implementation (libs.material3)
+    implementation(libs.material3)
 
     //di koin
     implementation(dependency.koin.androidx.compose)
     implementation(dependency.koin.test)
     testImplementation(dependency.koin.android.test)
 
-
     //  exoplayer
-    implementation ("androidx.media3:media3-exoplayer:1.6.1")
-    implementation ("androidx.media3:media3-ui:1.6.1")
-    implementation ("androidx.media3:media3-common:1.6.1")
+    implementation(dependency.media3.exoplayer)
+    implementation(dependency.media3.ui)
+    implementation(dependency.media3.common)
+
     //network ktor
-    implementation(platform("io.ktor:ktor-bom:3.1.2"))
-    implementation("io.ktor:ktor-client-android")
-    implementation("io.ktor:ktor-client-serialization")
-    implementation("io.ktor:ktor-client-logging")
-    implementation("io.ktor:ktor-client-content-negotiation")
-    implementation("io.ktor:ktor-serialization-kotlinx-json")
-    implementation("io.ktor:ktor-client-okhttp:2.3.4")
+    implementation(platform(dependency.ktor.bom))
+    implementation(dependency.ktor.android)
+    implementation(dependency.ktor.serialization)
+    implementation(dependency.ktor.logging)
+    implementation(dependency.ktor.negotiation)
+    implementation(dependency.ktor.json)
+    implementation(dependency.ktor.okhttp)
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation(dependency.coroutines.android)
     // log  timber
-    implementation ("com.jakewharton.timber:timber:5.0.1")
+    implementation(dependency.timber.log)
 
     // image loader coil
-    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+    implementation(dependency.coil.image)
 
     //DB Room
-    implementation("androidx.room:room-runtime:2.7.1")
-    ksp("androidx.room:room-compiler:2.7.1")
-    implementation("androidx.room:room-ktx:2.7.1")
+    implementation(dependency.room.runtime)
+    ksp(dependency.room.compiler)
+    implementation(dependency.room.ktx)
 
     // CameraX
-    implementation ("androidx.camera:camera-core:1.4.0-alpha02")
-    implementation ("androidx.camera:camera-lifecycle:1.4.0-alpha02")
-    implementation ("androidx.camera:camera-view:1.4.0-alpha02")
+    implementation(dependency.camera.core)
+    implementation(dependency.camera.lifecycle)
+    implementation(dependency.camera.view)
+
     // Permissions
-    implementation ("com.google.accompanist:accompanist-permissions:0.30.1")
+    implementation(dependency.accompanist.permissions)
 
+    //security
+    implementation(dependency.security.crypto)
+    // implementation("androidx.security:security-state:1.0.0")
 
-
-    implementation("androidx.security:security-crypto:1.0.0")
-    implementation("androidx.security:security-state:1.0.0")
-    implementation("com.google.code.gson:gson:2.13.1")
+    // google gson
+    implementation(dependency.google.gson)
 }
