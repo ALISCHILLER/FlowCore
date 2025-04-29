@@ -1,4 +1,4 @@
-package com.msa.core.network.utils
+package com.msa.core.data.network.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

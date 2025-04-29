@@ -1,4 +1,4 @@
-package com.msa.core.network.model
+package com.msa.core.data.network.model
 
 
 

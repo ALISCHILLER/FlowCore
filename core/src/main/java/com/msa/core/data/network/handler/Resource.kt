@@ -1,4 +1,4 @@
-package com.msa.core.network.handler
+package com.msa.core.data.network.handler
 
 /**
  * یک sealed class برای مدیریت وضعیت‌های مختلف عملیات‌های غیرهمزمان.

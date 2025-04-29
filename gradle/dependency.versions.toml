@@ -1,7 +1,7 @@
 [versions]
 
 koin = "4.0.2"
-
+media3 = "1.4.1"
 [libraries]
 
 # di  koin
@@ -10,7 +10,7 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 koin-android-test = { module = "io.insert-koin:koin-android-test", version.ref = "koin" }
 
-
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 
 [plugins]
 

@@ -1,37 +1,28 @@
 package com.msa.core.utils.logger
 
 import android.content.Context
-import android.os.Build
 import timber.log.Timber
 import java.io.File
-import java.io.FileWriter
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 object LoggerHelper {
 
-    private var logFile: File? = null
+    private lateinit var logFile: File
 
     /**
      * تنظیمات اولیه برای Timber
-     * این تابع باید در onCreate کلاس Application فراخوانی شود
      */
-    fun init(context: Context) {
-
-//        if (BuildConfig.DEBUG) {
-//            Timber.plant(Timber.DebugTree())  // برای محیط توسعه (Debug) از DebugTree استفاده می‌کنیم
-//        }
-
-        // ساخت پوشه و فایل لاگ
+    fun init(context: Context, logFileName: String = "error_log.txt") {
         val logDir = File(context.filesDir, "logs")
         if (!logDir.exists()) {
             logDir.mkdirs()
         }
 
-        logFile = File(logDir, "error_log.txt")
+        logFile = File(logDir, logFileName)
 
         // راه‌اندازی Timber با Tree سفارشی برای نوشتن لاگ‌ها به فایل
-        Timber.plant(FileLoggingTree(logFile!!))
+        Timber.plant(FileLoggingTree(logFile))
     }
 
     // برای لاگ کردن پیام‌های Debug
@@ -66,16 +57,18 @@ object LoggerHelper {
 
     // خواندن محتویات فایل لاگ
     fun readLogFile(): String? {
-        return logFile?.takeIf { it.exists() }?.readText(StandardCharsets.UTF_8)
+        return if (::logFile.isInitialized && logFile.exists()) {
+            logFile.readText(StandardCharsets.UTF_8)
+        } else {
+            null
+        }
     }
 
     // پاک کردن فایل لاگ
     fun clearLogFile() {
-        logFile?.let {
+        if (::logFile.isInitialized && logFile.exists()) {
             try {
-                if (it.exists()) {
-                    it.delete()
-                }
+                logFile.delete()
             } catch (e: IOException) {
                 Timber.e(e, "Error deleting log file")
             }
@@ -84,14 +77,30 @@ object LoggerHelper {
 }
 
 
-//LoggerHelper.init(applicationContext)
+
+
+
+//val loggerHelper: LoggerHelper by inject()
+//var logContent by remember { mutableStateOf("") }
 //
-//// برای لاگ کردن خطا
-//LoggerHelper.e("این یک پیام خطا است!")
-//
-//// برای لاگ کردن هشدار
-//LoggerHelper.w("این یک پیام هشدار است!")
+//// ایجاد لاگ جدید
+//loggerHelper.e("این یک پیام خطا است!")
+//loggerHelper.w("این یک پیام هشدار است!")
 //
 //// خواندن محتویات فایل لاگ
+//logContent = LoggerHelper.readLogFile() ?: "فایل لاگ خالی است."
+//// پاک کردن فایل لاگ
+//LoggerHelper.clearLogFile()
+//logContent = "فایل لاگ پاک شد!"
+
+
+//private val loggerHelper: LoggerHelper by inject()
+//
+//fun logSomething() {
+//    loggerHelper.e("این یک پیام خطا است!")
+//    loggerHelper.w("این یک پیام هشدار است!")
+//}
+//
 //val logContent = LoggerHelper.readLogFile()
 //println(logContent)
+//LoggerHelper.clearLogFile()

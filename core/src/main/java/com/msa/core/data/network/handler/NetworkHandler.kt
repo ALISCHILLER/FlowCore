@@ -1,7 +1,8 @@
-package com.msa.core.network.handler
+package com.msa.core.data.network.handler
 
 import android.util.Log
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -26,7 +27,7 @@ object NetworkHandler {
     /**
      * HttpClient با تنظیمات پیشرفته.
      */
-    private val httpClient = HttpClient(OkHttp) {
+    private  val httpClient = HttpClient(OkHttp) {
         // Serializer برای تبدیل JSON
         install(ContentNegotiation) {
             json(
@@ -38,6 +39,7 @@ object NetworkHandler {
                 }
             )
         }
+
 
         // لاگ‌گیری برای Debugging
         install(Logging) {
@@ -71,6 +73,12 @@ object NetworkHandler {
     }
 
     /**
+     * تابع عمومی برای دسترسی به HttpClient.
+     */
+    public fun getHttpClient(): HttpClient {
+        return httpClient
+    }
+    /**
      * تابع مرکزی برای انجام درخواست‌های شبکه و مدیریت خطاهای احتمالی.
      */
     suspend fun <T> safeApiCall(apiCall: suspend () -> T): NetworkResult<T> {
@@ -88,9 +96,9 @@ object NetworkHandler {
     /**
      * تابعی برای انجام درخواست GET.
      */
-    inline fun <reified T> getRequest(url: String): NetworkResult<T> {
+    suspend inline fun <reified T> getRequest(url: String): NetworkResult<T> {
         return safeApiCall {
-            httpClient.get(url) {
+            getHttpClient().get(url) {
                 contentType(ContentType.Application.Json)
             }.body()
         }
@@ -99,9 +107,9 @@ object NetworkHandler {
     /**
      * تابعی برای انجام درخواست POST.
      */
-    inline fun <reified T> postRequest(url: String, body: Any): NetworkResult<T> {
+    suspend inline fun <reified T> postRequest(url: String, body: Any): NetworkResult<T> {
         return safeApiCall {
-            httpClient.post(url) {
+            getHttpClient().post(url) {
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }.body()
@@ -111,9 +119,9 @@ object NetworkHandler {
     /**
      * تابعی برای انجام درخواست PUT.
      */
-    inline fun <reified T> putRequest(url: String, body: Any): NetworkResult<T> {
+    suspend inline fun <reified T> putRequest(url: String, body: Any): NetworkResult<T> {
         return safeApiCall {
-            httpClient.put(url) {
+            getHttpClient().put(url) {
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }.body()

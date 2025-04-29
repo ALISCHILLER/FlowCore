@@ -1,4 +1,4 @@
-package com.msa.core.network.handler
+package com.msa.core.data.network.handler
 
 import java.io.IOException
 import kotlinx.coroutines.CancellationException

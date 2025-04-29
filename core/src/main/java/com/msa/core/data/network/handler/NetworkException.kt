@@ -1,4 +1,4 @@
-package com.msa.core.network.handler
+package com.msa.core.data.network.handler
 
 /**
  * استثناء‌ای برای مدیریت خطاهای خاص شبکه.
@@ -6,7 +6,7 @@ package com.msa.core.network.handler
 class NetworkException(
     val errorCode: Int, // کد خطای HTTP یا کد خاص
     val errorMessage: String, // پیام خطای مرتبط
-    val cause: Throwable? = null, // دلیل اصلی استثناء (در صورت وجود)
+    override val cause: Throwable? = null, // دلیل اصلی استثناء (در صورت وجود)
     val retryCount: Int = 0 // تعداد تلاش‌های مجدد (اختیاری)
 ) : Exception(errorMessage, cause) {
 
