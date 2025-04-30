@@ -1,51 +1,35 @@
 package com.msa.core.data.network.handler
 
-import java.io.IOException
-import kotlinx.coroutines.CancellationException
+import android.content.Context
+import com.msa.core.R
+import com.msa.core.data.network.model.ApiResponse
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.TimeoutCancellationException
 import timber.log.Timber
+import java.io.IOException
 
 /**
- * کلاس برای مدیریت خطاها و تبدیل استثناء‌ها به پیغام‌های قابل فهم برای کاربر یا لاگ‌گیری.
+ * کلاس مرکزی مدیریت خطاها با قابلیت چندزبانه‌سازی و لاگ‌گیری.
  */
 object ErrorHandler {
-
-    /**
-     * تبدیل استثناء به یک پیام خطا مشخص.
-     *
-     * @param exception استثناء رخ داده شده
-     * @return پیغام خطا مناسب برای کاربر
-     */
-    fun handleError(exception: Throwable): String {
-        val errorMessage = when (exception) {
-            is IOException -> {
-                "خطا در اتصال به اینترنت. لطفاً وضعیت اتصال خود را بررسی کنید."
-            }
-            is TimeoutCancellationException -> {
-                "زمان درخواست تمام شده است. لطفاً دوباره امتحان کنید."
-            }
-            is CancellationException -> {
-                "عملیات لغو شده است."
-            }
-            else -> {
-                "خطای ناشناخته"
-            }
+    fun getErrorMessage(exception: Throwable, context: Context): String {
+        val baseMessage = when (exception) {
+            is NetworkException -> context.getString(exception.errorCode.resourceId)
+            is IOException -> context.getString(R.string.error_no_internet)
+            is TimeoutCancellationException -> context.getString(R.string.error_timeout)
+            else -> context.getString(R.string.error_unknown)
         }
 
-        // لاگ‌گیری جزئیات خطا
-        Timber.e(exception, "An error occurred: $errorMessage")
+        val retryMessage = if (exception is NetworkException && exception.retryCount > 0) {
+            "\n" + context.resources.getQuantityString(
+                R.plurals.retry_remaining,
+                exception.retryCount,
+                exception.retryCount
+            )
+        } else {
+            ""
+        }
 
-        return errorMessage
-    }
-
-    /**
-     * پردازش و مدیریت خطاهای شبکه.
-     *
-     * @param exception استثناء رخ داده شده
-     * @return شیء NetworkResult.Error حاوی پیغام خطا
-     */
-    fun handleNetworkError(exception: Throwable): NetworkResult.Error {
-        val message = handleError(exception)
-        return NetworkResult.Error(exception, message)
+        return baseMessage + retryMessage
     }
 }
